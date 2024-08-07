@@ -103,7 +103,9 @@ async def prev_month_edit_message(callback: types.CallbackQuery, callback_data: 
 @dp.callback_query(My_cb.filter(F.name == 'prev'))
 async def prev_month_edit_message(callback: types.CallbackQuery, callback_data: My_cb):
     
-    current_year, current_month = callback_data.current_year - (callback_data.current_month)//12, (callback_data.current_month)%12-1
+ 
+    
+    current_year, current_month = callback_data.current_year - (callback_data.current_month)//12, (callback_data.current_month-2)%12+1
     
     obj = calendar.Calendar(0).monthdays2calendar(current_year, current_month)
     
