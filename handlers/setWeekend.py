@@ -56,12 +56,7 @@ async def get_busy_days_start(message: Message):
 async def set_weekend(callback: types.CallbackQuery, callback_data: My_cb_date):
     
     con, cur = create_connect()
-    time_slots = []
-    for i in range(1, 5):
-        time_slots.append((callback_data.date, i))
-        
-    con.executemany('INSERT INTO Datetime_slots (date_with_timezone, time_slot_id) VALUES (?, ?)', time_slots)
-    con.commit()
+
     con.executemany("INSERT INTO Records (datetime_slot_id, is_weekend) VALUES (?, ?)", 
                 [(i[0], 1) for i in cur.execute('select id from Datetime_slots order by id desc limit 4').fetchall()])
     

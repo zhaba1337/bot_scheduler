@@ -1,7 +1,7 @@
 
 
 
-from datetime import date, timedelta,datetime
+from datetime import timedelta
 def prev_month(current_month):
     return current_month.replace(day=1) - timedelta(days=1)
 
@@ -14,10 +14,11 @@ def next_month(current_month):
 from aiogram import types
 from db import * 
 import emoji
-def create_calendar(obj, builder, current_year, current_month, cb, cb_text='date'):
+def create_calendar(obj, builder, current_year, current_month, cb, cb_text='choice_time_slot'):
     con, cur = create_connect()
     busy_days = [i for j in cur.execute(f"""
-                select strftime('%d', date_with_timezone) from (SELECT date_with_timezone from Datetime_slots
+                select strftime('%d', date_with_timezone) from (SELECT date_with_timezone from Records
+                join Datetime_slots ON datetime_slot_id = Datetime_slots.id
                 GROUP BY strftime("%d", date_with_timezone)
                 HAVING count(date_with_timezone) = 4) as q
                 where (date_with_timezone BETWEEN ? and date(?, '-1 days', '+1 month'))                      
@@ -39,7 +40,7 @@ def create_calendar(obj, builder, current_year, current_month, cb, cb_text='date
                 
             if (data.zfill(2) in busy_days):
                 data += emoji.emojize(":cross_mark:")
-                for_callback = 'qwe'
+                for_callback = 'empty'
                 
             builder1.append(types.InlineKeyboardButton(
                 text= data,

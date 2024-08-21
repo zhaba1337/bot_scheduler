@@ -12,17 +12,29 @@ def close_connect(con):
     con.commit()
     con.close()
 
-def main():
+
+def add_datetime_slot():
     con, cur = create_connect()
-    time_slots = []
-    for i in range(1, 5):
-        time_slots.append(('2024-08-18', i))
-        
-    con.executemany( 
-        """INSERT INTO Records (client_id, datetime_slot_id, is_weekend) 
-            VALUES (?, ?, ?)""", [(6, i[0], 1) for i in cur.execute('select id from Datetime_slots order by id desc limit 4').fetchall()]
-            )
+
+    cur.execute('insert into Datetime_slots()')
+    
     close_connect(con)
+
+def main():
+    import calendar
+    import datetime
+    con, cur = create_connect()
+
+    
+    busy_time_slots = cur.execute("""select * from Datetime_slots 
+                                  join Records ON Records.datetime_slot_id = Datetime_slots.id and date_with_timezone = ?
+                                  """, ('2024-08-08',)).fetchall()
+   
+   
+    close_connect(con)
+
+
+
 
 #request for get busy_days in interval 
 # select * from (SELECT date_with_timezone from Datetime_slots
