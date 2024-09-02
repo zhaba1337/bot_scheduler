@@ -39,7 +39,7 @@ def create_calendar(obj, builder, current_year, current_month, cb, cb_text='choi
 
                 
             if (data.zfill(2) in busy_days):
-                data += emoji.emojize(":cross_mark:")
+                data = emoji.emojize(":cross_mark:")
                 for_callback = 'empty'
                 
             builder1.append(types.InlineKeyboardButton(

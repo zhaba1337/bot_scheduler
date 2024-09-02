@@ -1,5 +1,6 @@
 from aiogram.filters.callback_data import CallbackData
-
+from db import DB_connector
+from typing import List, Any
 
 class My_cb(CallbackData, prefix='my'):
     name: str
@@ -28,8 +29,17 @@ class CB_booking(CallbackData, prefix='booking client'):
     time_slot: int = '0'
     client_username: str = 'empty'
 
+    def for_owner(self) -> str:
+        return f"@{self.client_username}, дата: {self.date}, временной интервал: {DB_connector().get_time_slots()[self.time_slot-1]}"
 
+    def for_client(self) -> str:
+        return f"\nДата: {self.date}, временной интервал: {DB_connector().get_time_slots()[self.time_slot-1]}"
+    
+    def for_accept_bid(self) -> List[Any]:
+        return [self.client_username, self.date, self.time_slot]
+    
 
+    
 class Admin_cb(CallbackData, prefix='admin'):
     name: str
     month: str

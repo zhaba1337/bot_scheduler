@@ -15,7 +15,7 @@ def ikb_new(text: str, callback_data: CallbackData | str) -> types.InlineKeyboar
     return types.InlineKeyboardButton(text=text, callback_data=callback_data)
  
 
-def kb_calendar_names_row(prev_cb, next_cb, text):
+def kb_calendar_names_row(prev_cb, next_cb, text, ):
     return [
         types.InlineKeyboardButton(
                 text= '<',
@@ -32,9 +32,8 @@ def kb_calendar_names_row(prev_cb, next_cb, text):
         ]
 
 def kb_builder_calendar(year, month, prev_cb, next_cb) -> InlineKeyboardBuilder:
-    
     builder = InlineKeyboardBuilder()
-    builder.row(*kb_calendar_names_row(prev_cb=prev_cb, next_cb=next_cb, text=f"{calendar.month_name[month]} {year}"))
+    builder.row(*kb_calendar_names_row(prev_cb=prev_cb, next_cb=next_cb, text=f"{datetime(year, month, 1).strftime('%b')} {year}"))
     builder.row(*[types.InlineKeyboardButton(text= i, callback_data="empty") for i in ('Пн', "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")])
     obj = calendar.Calendar(0).monthdays2calendar(year, month)
     builder = create_calendar(obj, builder, year, month, CB_booking)
@@ -62,29 +61,29 @@ def ikb_builder_time_slots(date: str) -> InlineKeyboardBuilder:
         builder.row(types.InlineKeyboardButton(text=f"{i[1]}:00-{i[2]}:00", callback_data=for_callback))
     
     current_date = prev_month(datetime.strptime(date, '%Y-%m-%d')) 
-    back_btn_callback = CB_booking(name = 'next_month', current_year = current_date.year, current_month = current_date.month).pack()
+    back_btn_callback = CB_booking(name = 'next_month', date=f"{current_date.year}-{current_date.month}").pack()
     builder.row(types.InlineKeyboardButton(text='назад', callback_data = back_btn_callback))
     return builder
     
     
     
-def ikb_builder_owner_accept_reject(client_id, date, time) -> InlineKeyboardBuilder:
+def ikb_builder_owner_accept_reject(client_username, date, time) -> InlineKeyboardBuilder:
     
     builder = InlineKeyboardBuilder()
     
-    cb_accept = Owner_selection(name='accept', client_id=client_id, date=date, time=time)
-    cb_reject = Owner_selection(name='reject', client_id=client_id, date='-', time = -1)
+    cb_accept = CB_booking(name='accept_bid', date=date, time_slot=time, client_username=client_username).pack()
+    cb_reject = CB_booking(name='reject_bid', date=date, time_slot=time, client_username=client_username).pack()
     
     builder.row(ikb_new('Принять запись', cb_accept), ikb_new('Отказать', cb_reject))
     
     return builder
 
 
-def ikb_builder_owner_comment(client_id) -> InlineKeyboardBuilder:
+def ikb_builder_owner_comment(client_username) -> InlineKeyboardBuilder:
     builder = InlineKeyboardBuilder()
-    cb_accept =Owner_selection(name='comment_accept', client_id=client_id, date='qwe', time=-1)
-    cb_reject =Owner_selection(name='comment_reject', client_id=client_id, date='qwe', time=-1)
+    cb_accept =CB_booking(name='accept_comment', client_username=client_username).pack()
+    cb_reject =CB_booking(name='reject_comment').pack()
     
-    builder.row(ikb_new('Принять запись', cb_accept), ikb_new('Отказать', cb_reject))
+    builder.row(ikb_new('Оставить комментарий', cb_accept), ikb_new('не оставлять', cb_reject))
     
     return builder

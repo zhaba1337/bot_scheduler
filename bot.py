@@ -2,7 +2,7 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher
 
-from handlers import admin, booking, setWeekend, commandStart, startCalendar
+from handlers import admin, booking, setWeekend, commandStart, GetBooks, GetMyBook
 
 logging.basicConfig(level=logging.INFO)
 
@@ -32,8 +32,9 @@ async def main():
         admin.router,
         setWeekend.router,
         commandStart.router,
-        startCalendar.router,
-        booking.router
+        GetBooks.router,
+        booking.router,
+        GetMyBook.router,
     )
 
     await dp.start_polling(bot)
