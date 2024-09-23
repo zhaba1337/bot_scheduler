@@ -2,6 +2,9 @@ from aiogram.filters.callback_data import CallbackData
 from db import DB_connector
 from typing import List, Any
 
+import json
+
+
 class My_cb(CallbackData, prefix='my'):
     name: str
     message_id: int
@@ -38,7 +41,13 @@ class CB_booking(CallbackData, prefix='booking client'):
     def for_accept_bid(self) -> List[Any]:
         return [self.client_username, self.date, self.time_slot]
     
-
+    def get_json_cash(self) -> str:
+        returable_json = {
+            'state' : self.name, 
+            'date' : self.date, 
+            'time_slot' : self.time_slot
+        }
+        return json.dumps(returable_json)
     
 class Admin_cb(CallbackData, prefix='admin'):
     name: str

@@ -3,6 +3,8 @@ import logging
 from aiogram import Bot, Dispatcher
 
 from handlers import admin, booking, setWeekend, commandStart, GetBooks, GetMyBook
+from db import DB_connector
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,10 +17,19 @@ async def post(bot: Bot):#post sc worker нужны хз для чего для 
     
     await bot.send_message(539931122, text='qwe')
 
+async def update_db():
+    connector = DB_connector()
+    connector.delete_records_before_today()
+    connector.delete_datetimes_before_today()
+    connector.insert_datetime_slots()
+
+
 async def sc():
     while True:
         await post(bot=bot)
-        await asyncio.sleep(50)
+        await update_db()
+        await asyncio.sleep(86400)
+        
 
 def worker():
     asyncio.run(((sc())))

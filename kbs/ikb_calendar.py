@@ -79,9 +79,9 @@ def ikb_builder_owner_accept_reject(client_username, date, time) -> InlineKeyboa
     return builder
 
 
-def ikb_builder_owner_comment(client_username) -> InlineKeyboardBuilder:
+def ikb_builder_owner_comment(client_username, date, time_slot) -> InlineKeyboardBuilder:
     builder = InlineKeyboardBuilder()
-    cb_accept =CB_booking(name='accept_comment', client_username=client_username).pack()
+    cb_accept =CB_booking(name='accept_comment', client_username=client_username, date=date, time_slot=time_slot).pack()
     cb_reject =CB_booking(name='reject_comment').pack()
     
     builder.row(ikb_new('Оставить комментарий', cb_accept), ikb_new('не оставлять', cb_reject))

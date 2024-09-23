@@ -33,15 +33,17 @@ def create_calendar(obj, builder, current_year, current_month, cb, cb_text='choi
         for j in i:
             data, for_callback = '-', '-'
             if(j[0]):
-                
-                data = str(j[0])
-                for_callback = cb(name=cb_text, date=f"{current_year}-{str(current_month).zfill(2)}-{str(j[0]).zfill(2)}").pack()
+                if((datetime.strptime(f"{current_year}-{str(current_month).zfill(2)}-{str(j[0]).zfill(2)}", '%Y-%m-%d').date() > datetime.now().date())):
+                    
+                    data = str(j[0])
+                    for_callback = cb(name=cb_text, date=f"{current_year}-{str(current_month).zfill(2)}-{str(j[0]).zfill(2)}").pack()
 
-                
+
+
             if (data.zfill(2) in busy_days):
                 data = emoji.emojize(":cross_mark:")
                 for_callback = 'empty'
-                
+
             builder1.append(types.InlineKeyboardButton(
                 text= data,
                 callback_data = for_callback)
