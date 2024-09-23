@@ -9,7 +9,7 @@ from db import DB_connector
 logging.basicConfig(level=logging.INFO)
 
 
-bot = Bot(token="5135804286:AAH3Qx_sp9VegoosjzB2-GvUIrcVLqbBPLU")
+bot = Bot(token="")
 
 dp = Dispatcher()
 
