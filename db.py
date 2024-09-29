@@ -30,7 +30,7 @@ class DB_connector:
             JOIN Clients ON Clients.id = Records.client_id
             JOIN Datetime_slots ON Datetime_slots.id = datetime_slot_id
             JOIN Time_slots ON Datetime_slots.time_slot_id = Time_slots.id
-            ORDER BY Datetime_slots.date_with_timezone, start_at DESC"""
+            ORDER BY Datetime_slots.date_with_timezone, start_at ASC"""
         ).fetchall()
     
     def get_client_books(self, telegram_id: int) -> List[Any]:
@@ -39,7 +39,7 @@ class DB_connector:
             JOIN Clients ON Clients.id = Records.client_id and Clients.telegram_id = ?
             JOIN Datetime_slots ON Datetime_slots.id = datetime_slot_id
             JOIN Time_slots ON Datetime_slots.time_slot_id = Time_slots.id
-            ORDER BY Datetime_slots.date_with_timezone, start_at DESC"""
+            ORDER BY Datetime_slots.date_with_timezone, start_at ASC"""
         , (telegram_id, )).fetchall()
     
     
